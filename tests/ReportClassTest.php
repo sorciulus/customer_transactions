@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Report\Exceptions\CustomerTransactionNotFound;
+use Report\Exceptions\TransactionNotFound;
 use Report\Helper\ParseTransactionCsv;
 use Report\Model\DTO\Transaction;
 use Report\Model\TransactionRepository;
@@ -9,7 +9,7 @@ use Report\Report;
 use Report\Service\CurrencyExchange;
 
 class ReportClassTest extends TestCase
-{    
+{
     private $repository;
 
     protected function setUp(): void
@@ -20,7 +20,7 @@ class ReportClassTest extends TestCase
     }
 
     public function testReportClass()
-    {        
+    {
         $this->assertInstanceOf(Report::class, new Report($this->repository, new CurrencyExchange()));
     }
 
@@ -28,7 +28,7 @@ class ReportClassTest extends TestCase
     {
         $report = new Report($this->repository, new CurrencyExchange());
 
-        $transactions = $report->getTransacionByCustomerId(1);        
+        $transactions = $report->getTransacionByCustomerId(1);
 
         $this->assertTrue(is_array($transactions));
 
@@ -39,18 +39,18 @@ class ReportClassTest extends TestCase
     {
         $report = new Report($this->repository, new CurrencyExchange());
 
-        $transactions = $report->convertTransacionByCustomerId(1);
+        $transactions = $report->convertTransacionByCustomerId(1, 'EUR');
 
         $this->assertTrue(is_array($transactions));
     }
     
     public function testGetConvertTransacionByCustomerIdException()
     {
-        $this->expectException(CustomerTransactionNotFound::class);
+        $this->expectException(TransactionNotFound::class);
         
         $report = new Report($this->repository, new CurrencyExchange());
 
-        $transactions = $report->convertTransacionByCustomerId(10);
+        $transactions = $report->convertTransacionByCustomerId(10, 'EUR');
 
         $this->assertTrue(is_array($transactions));
     }

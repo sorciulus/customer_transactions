@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Report\Exceptions\CustomerTransactionNotFound;
+use Report\Exceptions\TransactionNotFound;
 use Report\Helper\ParseTransactionCsv;
 use Report\Model\DTO\Transaction;
 use Report\Model\TransactionRepository;
@@ -37,7 +37,7 @@ class TransactionRepositoryTest extends TestCase
 
     public function testGetTransactionByCustomerIdThrowNotFound()
     {
-        $this->expectException(CustomerTransactionNotFound::class);
+        $this->expectException(TransactionNotFound::class);
 
         $repository = new TransactionRepository($this->parser);
 

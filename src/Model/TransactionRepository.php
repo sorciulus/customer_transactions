@@ -20,7 +20,7 @@ class TransactionRepository
     {
         $transactions = $this->dataLayer->getTransactionByCustomerId($customerId);
 
-        if (!$transactions) {
+        if (empty($transactions)) {
             throw new TransactionNotFound("No transaction found for customer id : $customerId");            
         }
 

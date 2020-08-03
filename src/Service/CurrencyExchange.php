@@ -3,7 +3,7 @@
 namespace Report\Service;
 
 class CurrencyExchange
-{    
+{
     private $EUR_EUR = 1.0;
 
     private $USD_EUR = 0.85;
@@ -24,9 +24,11 @@ class CurrencyExchange
 
     private function getConvertCurrency(string $currencyValue, string $toCurrency) : ?float
     {
-        if(preg_match('/€|\$|£/', $currencyValue, $matches)){            
+        $currency = null;
+
+        if (preg_match('/€|\$|£/', $currencyValue, $matches)) {
             switch ($matches[0]) {
-                case '€':                    
+                case '€':
                     $currency = \sprintf('%s_%s', 'EUR', $toCurrency);
                 break;
                 case '$':
@@ -34,28 +36,26 @@ class CurrencyExchange
                 break;
                 case '£':
                     $currency = \sprintf('%s_%s', 'GBP', $toCurrency);
-                break;                        
-            }
+                break;                
+            }        
+        }
 
-            return $this->{$currency};
-        }              
+        return (property_exists($this, $currency)) ? $this->{$currency} : $currency;
     }
 
     /**
-     * @param string $currency     
+     * @param string $currency
      * @return float
      */
     public function convert(string $currency, string $toCurrency) : float
     {
-        $unitCurrencyConvert = $this->getConvertCurrency($currency, $toCurrency);        
+        $unitCurrencyConvert = $this->getConvertCurrency($currency, $toCurrency);
         if (is_null($unitCurrencyConvert)) {
-            throw new \Exception("Currency not found in exchange");            
+            throw new \Exception("Currency not found in exchange");
         }
 
         $clearCurrency = (float) preg_replace('/[^\w+|,|\.]/', '', $currency);
 
-        $result = $clearCurrency / $unitCurrencyConvert;
-
-        return number_format($result, 2);
+        return ($clearCurrency / $unitCurrencyConvert);
     }
 }

@@ -29,29 +29,22 @@ class ParseTransactionCsv implements DataLayerInterface
     }
   
     private function parse()
-    {
-        try {
-            $resource = fopen($this->filename, 'r');
-            $headers = fgetcsv($resource, 0, ';');
-
-            $data = [];
-            while (!feof($resource)) {
-                $rowTemp = fgetcsv($resource, 0, ';');
-                if (!$rowTemp) {
-                    continue;
+    {        
+        if (($resource = fopen($this->filename, 'r')) === false) {    
+            throw new Exception("Not reading csv file");                    
+        }
+        $headers = fgetcsv($resource, 0, ';');
+        $data = [];
+        while (($rowTemp = fgetcsv($resource, 800, ";")) !== false) {
+            foreach ($headers as $key => $header) {
+                if (isset($rowTemp[$key])) {
+                    $row[$header] = $rowTemp[$key];
                 }
-                foreach ($headers as $key => $header) {
-                    if (isset($rowTemp[$key])) {
-                        $row[$header] = $rowTemp[$key];
-                    }
-                }
-                array_push($data, $row);
             }
-            fclose($resource);
-            $this->data = $data;
-        } catch (\Throwable $th) {
-            throw new Exception($th->getMessage());
-        }                
+            array_push($data, $row);
+        }
+        fclose($resource);        
+        $this->data = $data;
     }
 
     /**

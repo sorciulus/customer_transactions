@@ -18,6 +18,6 @@ class CurrencyExchangeTest extends TestCase
 
         $result = $exchange->convert('£50.00', 'EUR');
 
-        $this->assertEquals(45.45, $result);
+        $this->assertEquals(45.45, number_format($result, 2));
     }
 }
